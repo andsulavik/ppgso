@@ -17,15 +17,19 @@
 #include "generator.h"
 #include "player.h"
 #include "space.h"
+#include "road.h"
+#include "Monster.h"
+#include "Pipe.h"
 
 const unsigned int SIZE = 512;
 
 /*!
  * Custom windows for our simple game
  */
+
 class SceneWindow : public ppgso::Window {
 private:
-  Scene scene;
+  Scene scene, scene2;
   bool animate = true;
 
   /*!
@@ -36,23 +40,129 @@ private:
     scene.objects.clear();
 
     // Create a camera
-    auto camera = std::make_unique<Camera>(60.0f, 1.0f, 0.1f, 100.0f);
-    camera->position.z = -15.0f;
+    auto camera = std::make_unique<Camera>(60.0f, 1.0f, 0.1f, 600.0f);
+    camera->position.z = -200.0f;
+    camera->position.y = 70.0f;
     scene.camera = move(camera);
 
     // Add space background
     scene.objects.push_back(std::make_unique<Space>());
 
     // Add generator to scene
-    auto generator = std::make_unique<Generator>();
-    generator->position.y = 10.0f;
-    scene.objects.push_back(move(generator));
+   // auto generator = std::make_unique<Generator>();
+   // generator->position.y = 10.0f;
+   // scene.objects.push_back(move(generator));
 
     // Add player to the scene
     auto player = std::make_unique<Player>();
-    player->position.y = -6;
+    player->position.y = -4.5f;
+    player->increase = true;
+    auto sh = std::make_unique<Shadow>();
+    sh->position.x = player->position.x ;
+    sh->position.y = player->position.y;
+    sh->rotation.z = -4.6f;
+    sh->rotation.x = 1.6f;
+    player->shadow = move(sh);
     scene.objects.push_back(move(player));
+
+    auto road1 = std::make_unique<Road>();
+    road1->position.x = 1.f;
+    road1->position.y = -6.f;
+    scene.objects.push_back(move(road1));
+
+      auto road2 = std::make_unique<Road>();
+      road2->position.y = 84.f;
+      road2->position.x = 90;
+      scene.objects.push_back(move(road2));
+
+      auto road3 = std::make_unique<Road>();
+      road3->position.y = 25.f;
+      road3->position.x = -80;
+      auto monster3 = std::make_unique<Monster>();
+      monster3->position.x = road3->position.x + rand() % 24 -24;
+      road3->monster = move(monster3);
+      scene.objects.push_back(move(road3));
+
+      auto road4 = std::make_unique<Road>();
+      road4->position.y = 60.f;
+      road4->position.x = 6;
+      scene.objects.push_back(move(road4));
+
+      auto road5 = std::make_unique<Road>();
+      road5->position.y = 116.f;
+      road5->position.x = 6;
+      auto pipe1 = std::make_unique<Pipe>();
+      auto spikes = std::make_unique<cactus>();
+      pipe1->position.x = road5->position.x - 15;
+      pipe1->position.y = road5->position.y + 22;
+      spikes->position.x = pipe1->position.x + 5.2f;
+      spikes->position.y = pipe1->position.y + 10.f;
+      pipe1->cactus = move(spikes);
+      road5->pipe = move(pipe1);
+      scene.objects.push_back(move(road5));
+
+      auto road6 = std::make_unique<Road>();
+      road6->position.y = 146.f;
+      road6->position.x = -80;
+      auto monster2 = std::make_unique<Monster>();
+      monster2->position.x = road6->position.x + rand() % 24 -24;
+      road6->monster = move(monster2);
+      scene.objects.push_back(move(road6));
+
+      auto road7 = std::make_unique<Road>();
+      road7->position.y = 146.f;
+      road7->position.x = -120;
+      scene.objects.push_back(move(road7));
+
+      auto road67 = std::make_unique<Road>();
+      road67->position.y = 146.f;
+      road67->position.x = -160;
+      auto monster1 = std::make_unique<Monster>();
+      monster1->position.x = road67->position.x + rand() % 24 -24;
+      road67->monster = move(monster1);
+      scene.objects.push_back(move(road67));
+
+      auto road8 = std::make_unique<Road>();
+      road8->position.y = 146.f;
+      road8->position.x = -200;
+      scene.objects.push_back(move(road8));
+
+      auto road9 = std::make_unique<Road>();
+      road9->position.y = 60.f;
+      road9->position.x = -300;
+      scene.objects.push_back(move(road9));
+
+      // Add generator to scene
+      auto generator = std::make_unique<Generator>();
+      generator->position.y = 10.0f;
+      scene.objects.push_back(move(generator));
+
   }
+
+    void initScene2() {
+        scene2.objects.clear();
+
+        // Create a camera
+        auto camera = std::make_unique<Camera>(60.0f, 1.0f, 0.1f, 600.0f);
+        camera->position.z = -200.0f;
+        camera->position.y = 70.0f;
+        scene2.camera = move(camera);
+
+        // Add space background
+        scene2.objects.push_back(std::make_unique<Space>());
+
+        // auto generator = std::make_unique<Generator>();
+        // generator->position.y = 10.0f;
+        // scene.objects.push_back(move(generator));
+
+        // Add player to the scene
+  /*      if (!shader) shader = std::make_unique<ppgso::Shader>(diffuse_vert_glsl, diffuse_frag_glsl);
+        if (!texture) {
+            texture = std::make_unique<ppgso::Texture>(ppgso::image::loadBMP("sphere.bmp"));
+        }
+        if (!mesh) mesh = std::make_unique<ppgso::Mesh>("cube.obj");"""*/
+
+    }
 
 public:
   /*!
@@ -73,6 +183,8 @@ public:
     glCullFace(GL_BACK);
 
     initScene();
+    initScene2();
+
   }
 
   /*!
@@ -87,7 +199,16 @@ public:
 
     // Reset
     if (key == GLFW_KEY_R && action == GLFW_PRESS) {
-      initScene();
+        Space::texture = std::make_unique<ppgso::Texture>(ppgso::image::loadBMP("bgr.bmp"));
+        initScene();
+        initScene2();
+    }
+
+    if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+        scene.intro = false;
+        scene.camera->position.z = -200.0f;
+        scene.camera->position.y = 70.0f;
+        scene.camera->position.x = 0;
     }
 
     // Pause
@@ -159,7 +280,19 @@ public:
 
     // Update and render all objects
     scene.update(dt);
-    scene.render();
+    if(scene.playR == 0){
+        scene.render();
+    }
+    else if(scene.playR == 1){
+        scene2.update(dt);
+        Space::texture = std::make_unique<ppgso::Texture>(ppgso::image::loadBMP("winner.bmp"));
+        scene2.render();
+    }
+    else {
+        scene2.update(dt);
+        Space::texture = std::make_unique<ppgso::Texture>(ppgso::image::loadBMP("gameover.bmp"));
+        scene2.render();
+    }
   }
 };
 

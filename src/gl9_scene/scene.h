@@ -13,14 +13,18 @@
  * Objects are stored in a list of objects
  * Keyboard and Mouse states are stored in a map and struct
  */
-class Scene {
+class Scene{
   public:
     /*!
      * Update all objects in the scene
      * @param time
      */
+    int playR = 3;
+    bool intro = true;
     void update(float time);
-
+    float pom = 0;
+    int position = 0;
+    glm::vec3 CamPositions[7] = {{0,20.f,-200.f}, {0,20.f,-100.f}, {-80, 25.f, -100.f}, {6, 116.f, -100.f}, {-80, 146.f, -100.f}, {-300, 60.f, -100.f}, {0,70.f,-200.f}};
     /*!
      * Render all objects in the scene
      */
@@ -44,7 +48,7 @@ class Scene {
     std::map< int, int > keyboard;
 
     // Lights, in this case using only simple directional diffuse lighting
-    glm::vec3 lightDirection{-1.0f, -1.0f, -1.0f};
+    glm::vec3 lightDirection{-1.0f, 1.0f, -1.0f};
 
     // Store cursor state
     struct {

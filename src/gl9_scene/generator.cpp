@@ -2,20 +2,20 @@
 #include <ppgso/ppgso.h>
 
 #include "generator.h"
-#include "asteroid.h"
+#include "particle.h"
 
 bool Generator::update(Scene &scene, float dt) {
   // Accumulate time
   time += dt;
-
   // Add object to scene when time reaches certain level
-  if (time > .3) {
-    auto obj = std::make_unique<Asteroid>();
-    obj->position = position;
-    obj->position.x += glm::linearRand(-20.0f, 20.0f);
-    scene.objects.push_back(move(obj));
-    time = 0;
-  }
+    if (time > .1) {
+        auto obj = std::make_unique<Particle>();
+        obj->position = position;
+        obj->position.y += glm::linearRand(200.0f, 250.0f);
+        obj->position.x += glm::linearRand(-500.0f, 500.f);
+        scene.objects.push_back(move(obj));
+        time = 0;
+    }
 
   return true;
 }

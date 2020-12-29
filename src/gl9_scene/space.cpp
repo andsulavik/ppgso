@@ -7,13 +7,13 @@
 Space::Space() {
   // Initialize static resources if needed
   if (!shader) shader = std::make_unique<ppgso::Shader>(texture_vert_glsl, texture_frag_glsl);
-  if (!texture) texture = std::make_unique<ppgso::Texture>(ppgso::image::loadBMP("stars.bmp"));
+  if (!texture) texture = std::make_unique<ppgso::Texture>(ppgso::image::loadBMP("bgr.bmp"));
   if (!mesh) mesh = std::make_unique<ppgso::Mesh>("quad.obj");
 }
 
 bool Space::update(Scene &scene, float dt) {
   // Offset for UV mapping, creates illusion of scrolling
-  textureOffset.y -= dt/5;
+  //textureOffset.y -= dt/5;
 
   generateModelMatrix();
   return true;

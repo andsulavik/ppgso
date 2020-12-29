@@ -2,6 +2,8 @@
 #include <ppgso/ppgso.h>
 
 #include "object.h"
+#include "road.h"
+#include "shadow.h"
 
 /*!
  * Simple object representing the player
@@ -15,6 +17,8 @@ private:
   static std::unique_ptr<ppgso::Shader> shader;
   static std::unique_ptr<ppgso::Texture> texture;
 
+  glm::vec3 rotMomentum;
+
   // Delay fire and fire rate
   float fireDelay{0.0f};
   float fireRate{0.1f};
@@ -24,6 +28,9 @@ public:
   /*!
    * Create a new player
    */
+  bool increase;
+  Road* closestRd = new Road();
+  std::unique_ptr<Shadow> shadow;
   Player();
 
   /*!

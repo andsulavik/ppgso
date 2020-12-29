@@ -2,7 +2,6 @@
 
 #include "camera.h"
 
-
 Camera::Camera(float fow, float ratio, float near, float far) {
   float fowInRad = (ppgso::PI/180.0f) * fow;
 
@@ -10,7 +9,7 @@ Camera::Camera(float fow, float ratio, float near, float far) {
 }
 
 void Camera::update() {
-  viewMatrix = lookAt(position, position-back, up);
+    viewMatrix = lookAt(position, position-back, up);
 }
 
 glm::vec3 Camera::cast(double u, double v) {
